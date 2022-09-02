@@ -6,4 +6,5 @@ Spotify Info retrieves selected data from the Spotify Web API. It focuses on art
 - see a list of top tracks (also shown under "Popular" in the Spotify app)
 - see selected API only artist and track information (popularity, genre and audio features)
 
-The list of recommended artists is obtained by calling the API Get recommendations function with the Artist as a seed. Get recommendations returns tracks – the list contains all artists in recommended tracks. It can be refreshed to get different results. Some audio features are displayed in a different format than in the API response: Duration is converted from milliseconds to hours, minutes and seconds, Key directly shows tones according to Pitch class, Mode directly shows modality (Major or Minor) and Tempo is rounded.
+The list of recommended artists is obtained by calling the API Get recommendations function with the Artist as a seed. Get recommendations returns tracks – the list contains all artists in recommended tracks. It can be refreshed to get different results.
+Some audio features are displayed in a different format than in the API response: Duration is converted from milliseconds to hours, minutes and seconds, Key directly shows tones according to Pitch class, Mode directly shows modality (Major or Minor) and Tempo is rounded.
