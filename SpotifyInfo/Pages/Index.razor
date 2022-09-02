@@ -1,0 +1,273 @@
+﻿@page "/"
+@using System.Diagnostics
+
+<head>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<PageTitle>Spotify Info</PageTitle>
+
+<h1>Spotify Info</h1>
+
+<input placeholder="Search artist" @bind="EnteredName" @onkeyup="(async(e) => await KeyPressed(e))" class="form-control" />
+
+<button @onclick="(async() => await SearchArtist(EnteredName))" class="btn btn-outline-primary">Search</button>
+
+@if (Error != "")
+{
+    <p class="error">@Error</p>
+}
+
+@if (FoundArtists != null && FoundArtists.Count != 0)
+{
+    <div class="row">
+        <div class="column">
+            <label class="alt-label">&nbsp;</label>
+            <ul class="list-group" id="foundartists-list-group">
+                @foreach (var artist in FoundArtists)
+                {
+                    <li class="list-group-item @(SelectedArtist != null && artist.ID == SelectedArtist.ID ? "active" : "")" @onclick="() => SelectedArtistChanged(artist)">
+                        <p><img src=@artist.SmallImageUrl class="small-image">@artist.Name</p>
+                    </li>
+                }
+            </ul>
+
+            @if (SelectedArtist != null)
+            {
+                <label class="alt-label" for="relatedartists-list-group">Related artists</label>
+                <ul class="list-group" id="relatedartists-list-group">
+                    @if (RelatedArtists != null)
+                    {
+                        @foreach (var artist in RelatedArtists)
+                        {
+                            <li class="list-group-item @(SelectedRelatedArtist != null && artist.ID == SelectedRelatedArtist.ID ? "active" : "")" @onclick="() => RelatedArtistChanged(artist)">
+                                <p><img src=@artist.SmallImageUrl class="small-image">@artist.Name</p>
+                            </li>
+                        }
+                    }
+                </ul>
+
+                <label class="alt-label" for="recommendedartists-list-group">Recommened artists</label>
+                <button @onclick="(async() => await GetRecommendedArtists(SelectedArtist.ID))" id="refresh-button">&#x21bb</button>
+                <ul class="list-group" id="recommendedartists-list-group">
+                    @if (RecommendedArtists != null)
+                    {
+                        @foreach (var artist in RecommendedArtists)
+                        {
+                            <li class="list-group-item @(SelectedRecommendedArtist != null && artist.ID == SelectedRecommendedArtist.ID ? "active" : "")" @onclick="() => RecommendedArtistChanged(artist)">
+                                <p><img src=@artist.SmallImageUrl class="small-image">@artist.Name</p>
+                            </li>
+                        }
+                    }
+                </ul>
+            }
+        </div>
+
+        @if (SelectedArtist != null || SelectedRelatedArtist != null || SelectedRecommendedArtist != null)
+        {
+            <div class="column">
+                <label class="alt-label" for="toptracks-list-group">Top tracks</label>
+                <ul class="list-group" id="toptracks-list-group">
+                    @if (ArtistsTopTracks != null)
+                    {
+                        @foreach (var track in ArtistsTopTracks)
+                        {
+                            <li class="list-group-item track @(SelectedTrack != null && track.ID == SelectedTrack.ID ? "active" : "")" @onclick="() => SelectedTrackChanged(track)">
+                                <p>@track.Name</p>
+                            </li>
+                        }
+                    }
+                </ul>
+
+                <label class="alt-label addspace-15">Artist details</label>
+                @if (ArtistDetails != null)
+                {
+                    <p><label>Name:</label> @ArtistDetails.Name</p>
+                    <p><label>Popularity:</label> @ArtistDetails.Popularity</p>
+                    <p><label>Genres:</label> @ArtistDetails.Genres</p>
+                    <img src=@ArtistDetails.LargeImageUrl class="large-image">
+                    <button @onclick="(async() => OpenArtist(ArtistDetails))" class="btn btn-outline-primary" id="open-button">Open in Spotify</button>
+                }
+            </div>
+        }
+
+        <div class="column">
+            @if (SelectedArtist != null && SelectedTrack != null)
+            {
+                <label class="alt-label addspace-15">Track</label>
+                <p><label>Name:</label> @SelectedTrack.Name</p>
+
+                <p><label>Duration:</label> @SelectedTrack.Duration</p>
+
+                <label>Popularity:</label>
+                <span> @SelectedTrack.Popularity</span>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: @SelectedTrack.Popularity%"></div>
+                </div>
+
+                <label>Acousticness:</label>
+                <span> @SelectedTrack.Acousticness</span>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: @((int)(SelectedTrack.Acousticness * 100))%"></div>
+                </div>
+
+                <label>Danceability:</label>
+                <span> @SelectedTrack.Danceability</span>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: @((int)(SelectedTrack.Danceability * 100))%"></div>
+                </div>
+
+                <label>Energy:</label>
+                <span> @SelectedTrack.Energy</span>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: @((int)(SelectedTrack.Energy * 100))%"></div>
+                </div>
+
+                <label>Instrumentalness:</label>
+                <span> @SelectedTrack.Instrumentalness</span>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: @((int)(SelectedTrack.Instrumentalness * 100))%"></div>
+                </div>
+
+                <label>Liveness:</label>
+                <span> @SelectedTrack.Liveness</span>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: @((int)(SelectedTrack.Liveness * 100))%"></div>
+                </div>
+
+                <label>Loudness:</label>
+                <span> @SelectedTrack.Loudness</span>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: @((int)(SelectedTrack.Loudness * (100/60) + 100))%"></div>
+                </div>
+
+                <label>Speechiness:</label>
+                <span> @SelectedTrack.Speechiness</span>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: @((int)(SelectedTrack.Speechiness * 100))%"></div>
+                </div>
+
+                <label>Valence:</label>
+                <span> @SelectedTrack.Valence</span>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: @((int)(SelectedTrack.Valence * 100))%"></div>
+                </div>
+
+                <p><label>Mode:</label> @SelectedTrack.Mode</p>
+
+                <p><label>Key:</label> @SelectedTrack.Key</p>
+
+                <p><label>Tempo:</label> @SelectedTrack.Tempo</p>
+
+                <p><label>Time signature:</label> @SelectedTrack.TimeSignature</p>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private string EnteredName { get; set; }
+    private string Error { get; set; }
+
+    private Artist SelectedArtist { get; set; }
+    private Artist SelectedRelatedArtist { get; set; }
+    private Artist SelectedRecommendedArtist { get; set; }
+    private Artist ArtistDetails { get; set; }
+    private Track SelectedTrack { get; set; }
+
+    private List<Artist> FoundArtists;
+    private List<Artist> RelatedArtists = new List<Artist>();
+    private List<Artist> RecommendedArtists = new List<Artist>();
+    private List<Track> ArtistsTopTracks = new List<Track>();
+
+    private SpotifyInfoService spotifyRecService = new SpotifyInfoService();
+
+    protected override async Task OnInitializedAsync()
+    {
+        //EnteredName = "Beatles";
+    }
+
+    private async Task KeyPressed(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await SearchArtist(EnteredName);
+    }
+
+    private async Task SearchArtist(string enteredName)
+    {
+        if (!string.IsNullOrEmpty(enteredName))
+        {
+            Error = "";
+            FoundArtists = await spotifyRecService.SearchArtist(enteredName);
+            if (FoundArtists == null)
+                Error = "Service not available...";
+            else if (FoundArtists.Count == 0)
+                Error = "Nothing found...";
+            RelatedArtists.Clear();
+            RecommendedArtists.Clear();
+            ArtistsTopTracks.Clear();
+            SelectedArtist = null;
+            SelectedRelatedArtist = null;
+            SelectedRecommendedArtist = null;
+            SelectedTrack = null;
+        }
+    }
+
+    private async Task SelectedArtistChanged(Artist artist)
+    {
+        SelectedArtist = artist;
+        ArtistDetails = SelectedArtist;
+        await GetRelatedArtists(artist.ID);
+        await GetRecommendedArtists(artist.ID);
+        await GetTopTracks(artist.ID);
+        SelectedTrack = null;
+    }
+
+    private async Task RelatedArtistChanged(Artist artist)
+    {
+        SelectedRelatedArtist = artist;
+        ArtistDetails = SelectedRelatedArtist;
+        await GetTopTracks(artist.ID);
+        SelectedRecommendedArtist = null;
+        SelectedTrack = null;
+    }
+
+    private async Task RecommendedArtistChanged(Artist artist)
+    {
+        SelectedRecommendedArtist = artist;
+        ArtistDetails = SelectedRecommendedArtist;
+        await GetTopTracks(artist.ID);
+        SelectedRelatedArtist = null;
+        SelectedTrack = null;
+    }
+
+    private void SelectedTrackChanged(Track track)
+    {
+        SelectedTrack = track;
+    }
+
+    private async Task GetRelatedArtists(string selectedArtistID)
+    {
+        RelatedArtists = await spotifyRecService.GetRelatedArtists(selectedArtistID);
+    }
+
+    private async Task GetRecommendedArtists(string selectedArtistID)
+    {
+        RecommendedArtists = await spotifyRecService.GetRecommendedArtists(selectedArtistID);
+    }
+
+    private async Task GetTopTracks(string selectedArtistID)
+    {
+        ArtistsTopTracks = await spotifyRecService.GetTopTracks(selectedArtistID);
+    }
+
+    private void OpenArtist(Artist artist)
+    {
+        Process.Start(new ProcessStartInfo
+            {
+                FileName = artist.Uri,
+                UseShellExecute = true
+            });
+    }
+}

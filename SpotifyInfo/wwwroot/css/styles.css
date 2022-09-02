@@ -1,0 +1,153 @@
+﻿body {
+}
+
+h1 {
+    background-color: #dc3545;
+    border-radius: 5px;
+    color: white;
+    font-size: 38px;
+    margin-top: 30px;
+    padding: 20px;
+}
+
+label {
+    font-weight: bold;
+}
+
+.alt-label {
+    color: #dc3545;
+    font-size: 18px;
+    margin-top: 25px;
+}
+
+.error {
+    margin-top: 25px;
+}
+
+input {
+    margin: 25px 20px 20px 0px;
+    min-width: 330px;
+    width: auto;
+}
+
+.form-control {
+    display: inline;
+    width: auto;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 33%
+}
+
+@media screen and (max-width: 1200px) {
+    .column {
+        flex: 50%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .column {
+        flex-direction: column;
+    }
+}
+
+.small-image {
+    margin-right: 10px;
+    max-height: 40px;
+    max-width: 40px;
+}
+
+.large-image {
+    margin: 20px 0px 40px 0px;
+    max-height: 330px;
+    max-width: 330px;
+}
+
+.artistlist {
+    height: 330px;
+}
+
+.tracklist {
+    height: 330px;
+}
+
+.list-group {
+    border: 1px solid lightgrey;
+    display: block;
+    height: 330px;
+    margin: 10px 30px 20px 0px;
+    max-width: 430px;
+    min-width: 330px;
+    overflow: auto;
+    width: auto;
+}
+
+    .list-group::-webkit-scrollbar {
+        width: 15px;
+    }
+
+    .list-group::-webkit-scrollbar-track {
+        border-radius: 3px;
+        color: #e9ecef;
+    }
+
+    .list-group::-webkit-scrollbar-thumb {
+        background-color: #e9ecef;
+        border-radius: 3px;
+    }
+
+.list-group-item {
+    border: none;
+    border-radius: 5px;
+    height: 50px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.track {
+    height: 30px;
+    padding: 5px;
+}
+
+.addspace-5 {
+    margin-bottom: 5px;
+}
+
+.addspace-15 {
+    margin-bottom: 15px;
+}
+
+.addspace-45 {
+    margin-bottom: 45px;
+}
+
+.progress {
+    margin-top: 2px;
+    margin-bottom: 15px;
+}
+
+#open-button {
+    display: block;
+    margin-bottom: 25px;
+}
+
+#refresh-button {
+    background-color: white;
+    border: none;
+    color: #0d6efd;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.about-list {
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+.about-list-item {
+    margin-bottom: 3px;
+}
