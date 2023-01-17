@@ -1,5 +1,5 @@
 # SpotifyInfo
-Spotify Info retrieves selected data from the Spotify Web API. It focuses on artists – after searching an artist by name you can:
+Spotify Info is a Blazor application that retrieves selected data from the Spotify Web API. It focuses on artists – after searching an artist by name you can:
 
 - see related artists (also shown under "Fans also like" in the Spotify app)
 - get other artist recommendations (based on Spotify Web API Get recommendations function)
